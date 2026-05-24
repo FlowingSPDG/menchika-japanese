@@ -1,12 +1,20 @@
 export type MenchikaToken =
   | { kind: 'ng' }
-  | { kind: 'shi_voiced' } // 4"
+  | { kind: 'shi_voiced' } // 4️⃣"
   | { kind: 'shi_plain' }
   | { kind: 'emoji'; value: string }
   | { kind: 'quote' }
   | { kind: 'period_handakuten' }
 
 const graphemeSeg = new Intl.Segmenter('ja', { granularity: 'grapheme' })
+
+/** 会話一覧の「し」表記（キーカップ 4） */
+const SHI_KEYCAP = '4️⃣'
+
+function shiKeycapLenAt(s: string, i: number): number {
+  const g = graphemeAt(s, i)
+  return g === SHI_KEYCAP ? g.length : 0
+}
 
 /** Next grapheme cluster starting exactly at byte index `start`, or null. */
 export function graphemeAt(input: string, start: number): string | null {
@@ -29,18 +37,18 @@ export function lexMenchika(input: string): MenchikaToken[] {
       i += 2
       continue
     }
-    if (rest.startsWith('4"')) {
+    const shiLen = shiKeycapLenAt(s, i)
+    if (shiLen > 0 && s[i + shiLen] === '"') {
       tokens.push({ kind: 'shi_voiced' })
-      i += 2
+      i += shiLen + 1
       continue
     }
-    // 「"4」を1トークンにすると 🥁"4 のような並びが壊れるため、「"」（濁点）と「4」（し）は常に分離する。
-    const c0 = rest[0]
-    if (c0 === '4') {
+    if (shiLen > 0) {
       tokens.push({ kind: 'shi_plain' })
-      i += 1
+      i += shiLen
       continue
     }
+    const c0 = rest[0]
     if (c0 === '"') {
       tokens.push({ kind: 'quote' })
       i += 1

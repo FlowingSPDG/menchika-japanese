@@ -66,7 +66,7 @@ async function hiraganaWithSuzume(
   suzume: NonNullable<Awaited<ReturnType<typeof getSuzume>>>,
 ): Promise<NormalizeResult> {
   const warnings: string[] = []
-  const raw = rawInput.normalize('NFKC')
+  const raw = normalizeLineBreaks(rawInput.normalize('NFKC'))
   const tokens = suzume.analyze(raw)
   let out = ''
 
@@ -100,8 +100,12 @@ async function hiraganaWithSuzume(
   return { hiragana: expandSmallKana(out), warnings }
 }
 
+function normalizeLineBreaks(s: string): string {
+  return s.replace(/\r\n/g, '\n').replace(/\r/g, '\n')
+}
+
 export async function toHiragana(input: string): Promise<NormalizeResult> {
-  const rawIn = input.normalize('NFKC')
+  const rawIn = normalizeLineBreaks(input.normalize('NFKC'))
   if (rawIn.trim() === '') return { hiragana: '', warnings: [] }
 
   if (!containsKanji(rawIn)) {

@@ -156,6 +156,14 @@ footer {
   color: var(--muted);
 }
 
+footer p {
+  margin: 0 0 0.5rem;
+}
+
+footer p:last-child {
+  margin-bottom: 0;
+}
+
 a {
   color: var(--link);
   word-break: break-all;

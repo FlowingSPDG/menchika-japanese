@@ -13,12 +13,15 @@
 
   const siteName = 'メン地下絵文字もどき変換機'
   const repoUrl = 'https://github.com/FlowingSPDG/menchika-japanese'
+  const devCredits = [
+    { name: 'FlowingSPDG', handle: 'flowingspdg' },
+    { name: '2fxz4x', handle: '2fxz4x' },
+  ] as const
   const inputTip =
     '対応していない語や読みが多いため、漢字混じりよりひらがなでの入力をおすすめします。'
 
   let themePref = $state<ThemePreference>('system')
   let japaneseIn = $state('')
-  let dialectPrefer = $state(false)
   let ngAsLiteral = $state(false)
   let hiraganaOut = $state('')
   let emojiEncOut = $state('')
@@ -69,7 +72,6 @@
       if (gen !== encodeGeneration) return
 
       const enc = encodeHiraganaToEmoji(normalized.hiragana, {
-        dialectPrefer,
         ngAsLiteral,
       })
       if (gen !== encodeGeneration) return
@@ -159,19 +161,11 @@
 
   <input
     type="checkbox"
-    id="opt-dialect"
-    bind:checked={dialectPrefer}
-    onchange={scheduleEncode}
-  />
-  <label for="opt-dialect">方言優先エンコード（✌ に / 🥁 たなど）</label>
-
-  <input
-    type="checkbox"
     id="opt-ng"
     bind:checked={ngAsLiteral}
     onchange={scheduleEncode}
   />
-  <label for="opt-ng">んを NG で出力（絵文字😐 の代わりにリテラル NG）</label>
+  <label for="opt-ng">んをリテラル NG で出力（既定は 🆖）</label>
 
   <label for="hiragana-out">ひらがな（変換後・読み取り専用）</label>
   <div id="hiragana-out" class="output" role="status">{hiraganaOut}</div>
@@ -229,7 +223,7 @@
 </fieldset>
 
 <details class="chart">
-  <summary>46音変換表（リファレンス）</summary>
+  <summary>メン地下会話絵文字一覧（46音）</summary>
   <table class="chart-grid">
     <thead>
       <tr>
@@ -259,6 +253,18 @@
 </details>
 
 <footer>
-  <a href={repoUrl} rel="noreferrer noopener" target="_blank">{repoUrl}</a>
-  ・読み・方言には揺れや誤差があります。
+  <p class="footer-credits">
+    開発:
+    {#each devCredits as dev, i}
+      {#if i > 0}&nbsp;{/if}
+      {dev.name}(<a
+        href="https://x.com/{dev.handle}"
+        rel="noreferrer noopener"
+        target="_blank">x:{dev.handle}</a>)
+    {/each}
+  </p>
+  <p>
+    <a href={repoUrl} rel="noreferrer noopener" target="_blank">{repoUrl}</a>
+    ・読みには揺れや誤差があります。
+  </p>
 </footer>

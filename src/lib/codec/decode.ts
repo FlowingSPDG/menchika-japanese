@@ -1,4 +1,4 @@
-import { resolveEmojiToHiragana } from './aliases'
+import { chartEmojiToHiragana } from './chart'
 import { lexMenchika } from './lexer'
 import { applySemiVoicedCombining, applyVoicedCombining } from './modifiers'
 
@@ -8,7 +8,7 @@ export interface DecodeResult {
 }
 
 /**
- * Decoder for menchika pseudotext: chart + aliases + literal NG + 4/4"/"4 + quote dakuten / period handakuten.
+ * Decoder for menchika pseudotext: 会話一覧 chart + literal NG + 4️⃣/4️⃣"/" + quote dakuten / period handakuten.
  */
 export function decodeEmojiText(input: string): DecodeResult {
   const warnings: string[] = []
@@ -79,7 +79,7 @@ export function decodeEmojiText(input: string): DecodeResult {
       }
       case 'emoji': {
         const g = t.value.normalize('NFKC')
-        const mora = resolveEmojiToHiragana(g)
+        const mora = chartEmojiToHiragana(g)
         if (mora !== undefined) {
           pushMora(mora)
         } else if (/\s/u.test(g) || g.trim() === '') {

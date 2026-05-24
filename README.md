@@ -4,7 +4,7 @@
 
 **公開 URL（GitHub Pages）**: https://flowingspdg.github.io/menchika-japanese/
 
-※ 読みや方言映射はゆれがあります。結果は確認の上使用してください。
+※ 読みの推定にはゆれがあります。結果は確認の上使用してください。
 
 ## 開発
 
@@ -36,8 +36,7 @@ npm run preview  # ビルド後の確認（同じ base パス）
 
 ## 変換仕様の要約
 
-- **正規 46 音表**: [`src/lib/codec/chart.ts`](src/lib/codec/chart.ts)
-- **コミュニティ別表記**: [`src/lib/codec/aliases.ts`](src/lib/codec/aliases.ts)（デコード両対応／エンコードは「方言優先」トグル時）
-- **修飾子**: `NG`（ん）、ASCII `4`（し）、`4"`（じ）、続く ASCII `"`（U+0022）が直前のモーラへの濁点を付与、`。` が半濁点（は行）。`"` と数字 `4` は別々のトークンとして解釈し、`🥁"4` →「だし」のように並べられる（詳細は `src/lib/codec/lexer.ts`）。
+- **メン地下会話絵文字一覧（46音）**: [`src/lib/codec/chart.ts`](src/lib/codec/chart.ts)
+- **修飾子**: リテラル `NG`（ん）、`4️⃣`（し）、`4️⃣"`（じ）、ASCII `"`（濁点）、`。`（半濁点）。`🥁"4️⃣` のように「"」と `4️⃣` は分離して解釈する（詳細は [`src/lib/codec/lexer.ts`](src/lib/codec/lexer.ts)）。
 
 ライセンス: [MIT](./LICENSE)

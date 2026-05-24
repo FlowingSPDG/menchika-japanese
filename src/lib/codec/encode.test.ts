@@ -4,40 +4,37 @@ import { analyzeKanaGrapheme, encodeHiraganaToEmoji } from './encode'
 describe('encodeHiraganaToEmoji', () => {
   it('canonical round-trip for simple mora（あ）', () => {
     const { emoji } = encodeHiraganaToEmoji('あ')
-    expect(emoji).toBe('🐜')
+    expect(emoji).toBe('🍨')
   })
 
   it('adds ascii quote after voiced mora（だ）', () => {
     const { emoji, warnings } = encodeHiraganaToEmoji('だ')
     expect(warnings).toHaveLength(0)
-    expect(emoji).toBe('🐙"')
+    expect(emoji).toBe('🥁"')
   })
 
   it('adds period for hand row（ぷ）', () => {
-    expect(encodeHiraganaToEmoji('ぷ').emoji).toBe('🦩。')
+    expect(encodeHiraganaToEmoji('ぷ').emoji).toBe('🚢。')
   })
 
   it('emits NG literal when option set', () => {
     expect(encodeHiraganaToEmoji('ん', { ngAsLiteral: true }).emoji).toBe('NG')
-    expect(encodeHiraganaToEmoji('ん', {}).emoji).toBe('😐')
+    expect(encodeHiraganaToEmoji('ん', {}).emoji).toBe('🆖')
   })
 
-  it('Dialect: にゃん → にやん として ✌️🌴NG（小書き→通常＋方言）', () => {
-    const { emoji, warnings } = encodeHiraganaToEmoji('にゃん', {
-      dialectPrefer: true,
-      ngAsLiteral: true,
-    })
+  it('にゃん → にやん として ✌️🗻🆖（小書き→通常かな）', () => {
+    const { emoji, warnings } = encodeHiraganaToEmoji('にゃん')
     expect(warnings).toHaveLength(0)
-    expect(emoji).toBe('✌️🌴NG')
+    expect(emoji).toBe('✌️🗻🆖')
   })
 
-  it('Dialect: い uses squid', () => {
-    const { emoji } = encodeHiraganaToEmoji('い', { dialectPrefer: true })
-    expect(emoji).toBe('🦑')
+  it('にゃん + ngAsLiteral → ✌️🗻NG', () => {
+    const { emoji } = encodeHiraganaToEmoji('にゃん', { ngAsLiteral: true })
+    expect(emoji).toBe('✌️🗻NG')
   })
 
-  it('Dialect: base だ uses drum + quote', () => {
-    expect(encodeHiraganaToEmoji('だ', { dialectPrefer: true }).emoji).toBe('🥁"')
+  it('い uses squid from chart', () => {
+    expect(encodeHiraganaToEmoji('い').emoji).toBe('🦑')
   })
 })
 

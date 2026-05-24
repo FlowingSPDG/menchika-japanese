@@ -9,6 +9,7 @@
     themeToggleLabel,
     type ThemePreference,
   } from '$lib/theme'
+  import { buildCommitShort, buildCommitUrl } from '$lib/build-info'
   import { debounce } from '$lib/util/debounce'
 
   const siteName = 'メン地下絵文字↔️日本語の変換アプリ'
@@ -304,5 +305,9 @@
   <div class="footer-line">
     <a href={repoUrl} rel="noreferrer noopener" target="_blank">{repoUrl}</a>
     ・読みには揺れや誤差があります。
+  </div>
+  <div class="footer-line">
+    ビルド:
+    <a href={buildCommitUrl} rel="noreferrer noopener" target="_blank">{buildCommitShort}</a>
   </div>
 </footer>

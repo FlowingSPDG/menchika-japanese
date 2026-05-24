@@ -16,6 +16,13 @@ describe('decodeEmojiText', () => {
     expect(warnings).toHaveLength(0)
   })
 
+  it('decodes さ as 🈂️ and NFKC form サ️', () => {
+    expect(decodeEmojiText('🈂️').hiragana).toBe('さ')
+    expect(decodeEmojiText('🈂️').warnings).toHaveLength(0)
+    expect(decodeEmojiText('サ\uFE0F').hiragana).toBe('さ')
+    expect(decodeEmojiText('サ\uFE0F').warnings).toHaveLength(0)
+  })
+
   it('preserves line breaks between emoji', () => {
     const { hiragana, warnings } = decodeEmojiText('🍨\n🦑')
     expect(hiragana).toBe('あ\nい')

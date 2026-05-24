@@ -87,6 +87,8 @@ const _e2h = new Map<string, string>()
 for (const [h, e] of CHART_PAIRS) {
   _h2e.set(h, e)
   _e2h.set(e, h)
+  const nfkc = e.normalize('NFKC')
+  if (nfkc !== e && !_e2h.has(nfkc)) _e2h.set(nfkc, h)
 }
 
 export const HIRAGANA_TO_CANONICAL_EMOJI = _h2e
@@ -97,7 +99,7 @@ export function chartHiraganaToEmoji(ch: string): string | undefined {
 }
 
 export function chartEmojiToHiragana(emoji: string): string | undefined {
-  return _e2h.get(emoji)
+  return _e2h.get(emoji) ?? _e2h.get(emoji.normalize('NFKC'))
 }
 
 export function allChartHiragana(): readonly string[] {

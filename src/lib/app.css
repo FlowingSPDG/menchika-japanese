@@ -1,0 +1,162 @@
+:root {
+  font-family: system-ui, 'Hiragino Sans', sans-serif;
+  line-height: 1.45;
+  --gap: 0.75rem;
+
+  --bg: #f6f6f7;
+  --fg: #1a1a1a;
+  --muted: #555;
+  --border: #888;
+  --surface: #fff;
+  --warning: #b45309;
+  --link: #0b57d0;
+  --btn-bg: #fff;
+  --btn-border: #888;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #121212;
+  --fg: #e8e8e8;
+  --muted: #aaa;
+  --border: #555;
+  --surface: #1e1e1e;
+  --warning: #fbbf24;
+  --link: #8ab4f8;
+  --btn-bg: #2a2a2a;
+  --btn-border: #666;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 1rem;
+  max-width: 860px;
+  margin-inline: auto;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.site-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--gap);
+  margin-block-end: var(--gap);
+}
+
+.site-header h1 {
+  flex: 1;
+  min-width: 0;
+}
+
+h1 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+h2 {
+  font-size: 1rem;
+  margin: var(--gap) 0 calc(var(--gap) / 2);
+}
+
+fieldset {
+  border: 1px solid var(--border);
+  padding: calc(var(--gap) / 2) var(--gap);
+  margin: 0 0 var(--gap);
+  background: var(--surface);
+}
+
+label {
+  display: block;
+  margin-block: calc(var(--gap) / 2);
+}
+
+textarea,
+.output {
+  width: 100%;
+  display: block;
+  min-block-size: 4rem;
+  font: inherit;
+  padding: calc(var(--gap) / 2);
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.output {
+  background: var(--surface);
+}
+
+button {
+  font: inherit;
+  margin-inline-end: calc(var(--gap) / 2);
+  margin-block-end: calc(var(--gap) / 2);
+  padding: calc(var(--gap) / 3) calc(var(--gap) / 2);
+  color: var(--fg);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  filter: brightness(0.96);
+}
+
+:root[data-theme='dark'] button:hover {
+  filter: brightness(1.12);
+}
+
+.theme-toggle {
+  margin: 0;
+  white-space: nowrap;
+  font-size: 0.875rem;
+}
+
+.input-tip {
+  margin: 0 0 var(--gap);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.warnings {
+  font-size: 0.8rem;
+  color: var(--warning);
+}
+
+details.chart {
+  margin-block: var(--gap);
+}
+
+table.chart-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+table.chart-grid td,
+table.chart-grid th {
+  border: 1px solid var(--border);
+  padding: 0.2rem;
+  text-align: center;
+}
+
+footer {
+  font-size: 0.75rem;
+  margin-block-start: 2rem;
+  color: var(--muted);
+}
+
+a {
+  color: var(--link);
+  word-break: break-all;
+}

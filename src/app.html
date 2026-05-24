@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; base-uri 'self'; form-action 'none'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none';"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    %sveltekit.head%
+    <script>
+      ;(function () {
+        var k = 'menchika-theme-preference'
+        var p = localStorage.getItem(k)
+        var pref =
+          p === 'light' || p === 'dark' || p === 'system' ? p : 'system'
+        var dark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        var resolved = pref === 'system' ? (dark ? 'dark' : 'light') : pref
+        document.documentElement.dataset.theme = resolved
+        document.documentElement.dataset.themePreference = pref
+      })()
+    </script>
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+</html>

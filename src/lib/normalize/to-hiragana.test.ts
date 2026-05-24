@@ -16,4 +16,4 @@ describe('widenToHiragana / containsKanji', () => {
   })
 })
 
-/** Kuromoji + dict はブラウザ / vite preview で検証。CI の jsdom は HTTP が無いため省略。 */
+/** Suzume（WASM）はブラウザ / vite preview で検証。CI の jsdom では省略。 */

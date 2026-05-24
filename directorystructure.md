@@ -1,20 +1,23 @@
 ```
 menchika-japanese/
-├── .github/workflows/ci.yml   # 検証 + main/master push で GitHub Pages デプロイ
+├── .github/workflows/ci.yml   # audit + test + check + build → GitHub Pages
 ├── LICENSE
 ├── README.md
-├── index.html
+├── svelte.config.js           # adapter-static, paths.base
+├── vite.config.ts             # SvelteKit + WASM assets
 ├── package.json
-├── vite.config.ts             # base: /menchika-japanese/
 ├── tsconfig.json
-├── scripts/
-│   └── copy-kuromoji-dict.mjs # postinstall → public/dict
-├── public/
-│   └── dict/                  # （生成）Kuromoji 辞書 gz
 └── src/
-    ├── main.ts
-    ├── style.css
-    ├── codec/
-    └── normalize/
+    ├── app.html               # CSP・テーマ初期化
+    ├── routes/
+    │   ├── +layout.ts         # prerender, ssr: false
+    │   ├── +layout.svelte
+    │   └── +page.svelte       # UI
+    └── lib/
+        ├── app.css
+        ├── codec/
+        ├── normalize/         # suzume-init, to-hiragana
+        ├── theme.ts
+        └── util/
 
 ```

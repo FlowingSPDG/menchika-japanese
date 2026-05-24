@@ -22,13 +22,13 @@ describe('encodeHiraganaToEmoji', () => {
     expect(encodeHiraganaToEmoji('ん', {}).emoji).toBe('😐')
   })
 
-  it('Dialect: にゃん → ✌️⛰️NG（方言＋ NG）', () => {
+  it('Dialect: にゃん → にやん として ✌️🌴NG（小書き→通常＋方言）', () => {
     const { emoji, warnings } = encodeHiraganaToEmoji('にゃん', {
       dialectPrefer: true,
       ngAsLiteral: true,
     })
     expect(warnings).toHaveLength(0)
-    expect(emoji).toBe('✌️⛰️NG')
+    expect(emoji).toBe('✌️🌴NG')
   })
 
   it('Dialect: い uses squid', () => {

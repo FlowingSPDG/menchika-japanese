@@ -2,6 +2,7 @@ import {
   DIALECT_PREFERRED_HIRAGANA_TO_EMOJI,
   ALIAS_EMOJI_TO_HIRAGANA,
 } from './aliases'
+import { expandSmallKana } from '../normalize/expand-small-kana'
 import { chartHiraganaToEmoji } from './chart'
 
 export interface EncodeOptions {
@@ -39,7 +40,7 @@ type Tone = 'none' | 'voice' | 'half'
 /** Split one hiragana grapheme into base syllable character + dakuten/handakuten. */
 export function analyzeKanaGrapheme(g: string): { base: string; tone: Tone } {
   if (SMALL_HIRAGANA_TO_EMOJI.has(g)) return { base: g, tone: 'none' }
-  const nf = [...g.normalize('NFD')]
+  const nf = Array.from(g.normalize('NFD'))
   let tone: Tone = 'none'
   const filtered: string[] = []
   for (const ch of nf) {
@@ -78,10 +79,12 @@ export function encodeHiraganaToEmoji(
   const out: string[] = []
   const dialectPrefer = options.dialectPrefer ?? false
   const ngLit = options.ngAsLiteral ?? false
+  const normalized = expandSmallKana(input)
 
   const seg = new Intl.Segmenter('ja', { granularity: 'grapheme' })
-  for (const { segment: g } of seg.segment(input)) {
-    const ch = g
+  for (const part of seg.segment(normalized)) {
+    const ch =
+      typeof part.segment === 'string' ? part.segment : String(part.segment ?? '')
     if (ch.trim() === '' || /[\s\-ー〜…、。,!！?？]/u.test(ch)) continue
 
     const { base, tone } = analyzeKanaGrapheme(ch)

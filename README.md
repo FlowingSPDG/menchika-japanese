@@ -14,11 +14,14 @@
 npm ci
 npm run dev      # http://localhost:5173/menchika-japanese/
 npm test
+npm run check    # svelte-check（型・Svelte 構文）
 npm run build
 npm run preview  # ビルド後の確認（同じ base パス）
 ```
 
-`vite.config.ts` の `base: '/menchika-japanese/'` は、リポジトリ名 `menchika-japanese` の **プロジェクトサイト**用です。ユーザー名・リポジトリ名を変えた場合は `base` も `/あなたのリポジトリ名/` に合わせてください。
+スタックは **SvelteKit 2（adapter-static）+ Svelte 5 + TypeScript + Vite 8** です。漢字→ひらがなは **Suzume**（WASM、約 450KB gzip）で形態素解析し、読みは `reading-snapshot.json`（`npm run generate:readings` で更新・ビルド時のみ kuromoji 使用）で補完します。UI は Svelte コンポーネント（自動エスケープ）、変換ロジックは `src/lib/` に分離しています。
+
+`svelte.config.js` の `paths.base: '/menchika-japanese'` は、リポジトリ名 `menchika-japanese` の **プロジェクトサイト**用です。ユーザー名・リポジトリ名を変えた場合は `base` も `/あなたのリポジトリ名` に合わせてください。
 
 ## GitHub Pages へのデプロイ
 
@@ -33,8 +36,8 @@ npm run preview  # ビルド後の確認（同じ base パス）
 
 ## 変換仕様の要約
 
-- **正規 46 音表**: [`src/codec/chart.ts`](src/codec/chart.ts)
-- **コミュニティ別表記**: [`src/codec/aliases.ts`](src/codec/aliases.ts)（デコード両対応／エンコードは「方言優先」トグル時）
-- **修飾子**: `NG`（ん）、ASCII `4`（し）、`4"`（じ）、続く ASCII `"`（U+0022）が直前のモーラへの濁点を付与、`。` が半濁点（は行）。`"` と数字 `4` は別々のトークンとして解釈し、`🥁"4` →「だし」のように並べられる（詳細は `src/codec/lexer.ts`）。
+- **正規 46 音表**: [`src/lib/codec/chart.ts`](src/lib/codec/chart.ts)
+- **コミュニティ別表記**: [`src/lib/codec/aliases.ts`](src/lib/codec/aliases.ts)（デコード両対応／エンコードは「方言優先」トグル時）
+- **修飾子**: `NG`（ん）、ASCII `4`（し）、`4"`（じ）、続く ASCII `"`（U+0022）が直前のモーラへの濁点を付与、`。` が半濁点（は行）。`"` と数字 `4` は別々のトークンとして解釈し、`🥁"4` →「だし」のように並べられる（詳細は `src/lib/codec/lexer.ts`）。
 
 ライセンス: [MIT](./LICENSE)

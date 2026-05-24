@@ -1,12 +1,10 @@
-/// <reference types="vitest/config" />
+import { sveltekit } from '@sveltejs/kit/vite'
+import { defineConfig } from 'vite'
 
-import { defineConfig } from 'vitest/config'
-
-/** GitHub Pages プロジェクトサイト: https://flowingspdg.github.io/menchika-japanese/ */
 export default defineConfig({
-  base: '/menchika-japanese/',
-  test: {
-    environment: 'jsdom',
-    globals: true,
+  plugins: [sveltekit()],
+  assetsInclude: ['**/*.wasm'],
+  optimizeDeps: {
+    exclude: ['@libraz/suzume'],
   },
 })

@@ -82,8 +82,11 @@ export function decodeEmojiText(input: string): DecodeResult {
         const mora = chartEmojiToHiragana(g)
         if (mora !== undefined) {
           pushMora(mora)
+        } else if (/[\n\r\u2028\u2029]/u.test(g)) {
+          flushUnknown()
+          moras.push('\n')
         } else if (/\s/u.test(g) || g.trim() === '') {
-          // skip whitespace
+          // skip other whitespace
         } else {
           unknownRun += g
         }

@@ -41,11 +41,17 @@ export function encodeHiraganaToEmoji(
   const out: string[] = []
   const ngLit = options.ngAsLiteral ?? false
   const normalized = expandSmallKana(input)
+    .replace(/\r\n/g, '\n')
+    .replace(/\r/g, '\n')
 
   const seg = new Intl.Segmenter('ja', { granularity: 'grapheme' })
   for (const part of seg.segment(normalized)) {
     const ch =
       typeof part.segment === 'string' ? part.segment : String(part.segment ?? '')
+    if (/^[\n\u2028\u2029]$/u.test(ch)) {
+      out.push('\n')
+      continue
+    }
     if (ch.trim() === '' || /[\s\-ー〜…、。,!！?？]/u.test(ch)) continue
 
     const { base, tone } = analyzeKanaGrapheme(ch)

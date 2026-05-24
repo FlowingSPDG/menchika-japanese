@@ -36,6 +36,12 @@ describe('encodeHiraganaToEmoji', () => {
   it('い uses squid from chart', () => {
     expect(encodeHiraganaToEmoji('い').emoji).toBe('🦑')
   })
+
+  it('preserves line breaks', () => {
+    const { emoji, warnings } = encodeHiraganaToEmoji('あ\nい\r\nう')
+    expect(warnings).toHaveLength(0)
+    expect(emoji).toBe('🍨\n🦑\n🐴')
+  })
 })
 
 describe('analyzeKanaGrapheme', () => {

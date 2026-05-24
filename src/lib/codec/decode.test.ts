@@ -10,9 +10,15 @@ describe('decodeEmojiText', () => {
 
   it('decodes full thread-style golden string', () => {
     const q = String.fromCharCode(34)
-    const input = `🦑😷😷4️⃣${q}🍎📕✌️🗻🆖🍉🥦🥁${q}4️⃣🦑🩸🦷${q}🆖🥁🦑🚢。`
+    const input = `🦑😷😷4️⃣${q}🍎📕✌️🗻🆖🍉🌳🥁${q}4️⃣🦑🩸🦷${q}🆖🥁🦑🚢。`
     const { hiragana, warnings } = decodeEmojiText(input)
     expect(hiragana).toBe('いままじりほにやんすきだしいちばんたいぷ')
+    expect(warnings).toHaveLength(0)
+  })
+
+  it('preserves line breaks between emoji', () => {
+    const { hiragana, warnings } = decodeEmojiText('🍨\n🦑')
+    expect(hiragana).toBe('あ\nい')
     expect(warnings).toHaveLength(0)
   })
 

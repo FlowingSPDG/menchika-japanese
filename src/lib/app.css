@@ -52,9 +52,16 @@ body {
   margin-block-end: var(--gap);
 }
 
-.site-header h1 {
+.site-heading {
   flex: 1;
   min-width: 0;
+}
+
+.site-intro {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--muted);
 }
 
 h1 {
@@ -93,6 +100,7 @@ textarea,
 
 .output {
   background: var(--surface);
+  white-space: pre-wrap;
 }
 
 button {
@@ -133,8 +141,12 @@ button:hover {
   color: var(--warning);
 }
 
-details.chart {
-  margin-block: var(--gap);
+.chart-open-row {
+  margin: 0 0 var(--gap);
+}
+
+.chart-open-btn {
+  margin: 0;
 }
 
 table.chart-grid {
@@ -150,18 +162,113 @@ table.chart-grid th {
   text-align: center;
 }
 
-footer {
+.chart-row-label {
+  white-space: nowrap;
+  font-weight: 600;
+  background: var(--bg);
+}
+
+.chart-cell-empty {
+  background: var(--bg);
+}
+
+.chart-cell-kana,
+.chart-cell-emoji {
+  display: block;
+}
+
+.chart-cell-emoji {
+  font-size: 1.1em;
+  line-height: 1.2;
+}
+
+.chart-modal {
+  border: none;
+  padding: 0;
+  max-width: min(96vw, 36rem);
+  max-height: min(92vh, 40rem);
+  background: transparent;
+  color: var(--fg);
+}
+
+.chart-modal::backdrop {
+  background: rgb(0 0 0 / 0.5);
+}
+
+.chart-modal-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: min(92vh, 40rem);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.2);
+}
+
+.chart-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--gap);
+  padding: calc(var(--gap) / 2) var(--gap);
+  border-bottom: 1px solid var(--border);
+}
+
+.chart-modal-header h2 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.chart-modal-close {
+  margin: 0;
+  min-width: 2rem;
+  padding: 0.15rem 0.4rem;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.chart-modal-body {
+  overflow: auto;
+  padding: var(--gap);
+}
+
+.chart-modal-note {
+  margin: var(--gap) 0 0;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.chart-modal-note code {
+  font-size: 0.9em;
+}
+
+.chart-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: calc(var(--gap) / 2) var(--gap);
+  border-top: 1px solid var(--border);
+}
+
+.chart-modal-footer button {
+  margin: 0;
+}
+
+.site-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
   font-size: 0.75rem;
   margin-block-start: 2rem;
   color: var(--muted);
 }
 
-footer p {
-  margin: 0 0 0.5rem;
-}
-
-footer p:last-child {
-  margin-bottom: 0;
+.footer-line {
+  display: block;
+  width: 100%;
+  margin: 0;
+  line-height: 1.5;
 }
 
 a {

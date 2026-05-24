@@ -7,11 +7,11 @@ export type ChartPair = readonly [hiragana: string, emoji: string]
 export const CHART_PAIRS: readonly ChartPair[] = [
   ['あ', '🍨'],
   ['い', '🦑'],
-  ['う', '🦍'],
+  ['う', '🐴'],
   ['え', '🖼️'],
   ['お', '👹'],
   ['か', '🦟'],
-  ['き', '🥦'],
+  ['き', '🌳'],
   ['く', '🐻'],
   ['け', '⚔️'],
   ['こ', '🐨'],
@@ -46,11 +46,39 @@ export const CHART_PAIRS: readonly ChartPair[] = [
   ['ら', '🎒'],
   ['り', '🍎'],
   ['る', '🇷🇴'],
-  ['れ', '🍫'],
+  ['れ', '🧱'],
   ['ろ', '6️⃣'],
   ['わ', '🐊'],
   ['を', '🎵'],
   ['ん', '🆖'],
+]
+
+/** 五十音の行ラベル（CHART_ROWS と同じ順・長さ） */
+export const CHART_ROW_LABELS = [
+  'あ',
+  'か',
+  'さ',
+  'た',
+  'な',
+  'は',
+  'ま',
+  'や',
+  'ら',
+  'わ',
+] as const
+
+/** 変換表表示用：あ行・か行…わ行ごとの5列（や行・わ行は3音） */
+export const CHART_ROWS: readonly (readonly ChartPair[])[] = [
+  CHART_PAIRS.slice(0, 5),
+  CHART_PAIRS.slice(5, 10),
+  CHART_PAIRS.slice(10, 15),
+  CHART_PAIRS.slice(15, 20),
+  CHART_PAIRS.slice(20, 25),
+  CHART_PAIRS.slice(25, 30),
+  CHART_PAIRS.slice(30, 35),
+  CHART_PAIRS.slice(35, 38),
+  CHART_PAIRS.slice(38, 43),
+  CHART_PAIRS.slice(43, 46),
 ]
 
 const _h2e = new Map<string, string>()

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CHART_PAIRS } from '$lib/codec/chart'
+  import { CHART_ROW_LABELS, CHART_ROWS } from '$lib/codec/chart'
   import { decodeEmojiText } from '$lib/codec/decode'
   import { encodeHiraganaToEmoji } from '$lib/codec/encode'
   import { toHiragana } from '$lib/normalize/to-hiragana'
@@ -11,18 +11,17 @@
   } from '$lib/theme'
   import { debounce } from '$lib/util/debounce'
 
-  const siteName = 'メン地下絵文字もどき変換機'
+  const siteName = 'メン地下絵文字↔️日本語の変換アプリ'
+  const siteIntro =
+    'メン地下界隈で話題の絵文字もどき日本語と、ひらがな・漢字の日本語を、ブラウザ上で双方向に変換できます。'
   const repoUrl = 'https://github.com/FlowingSPDG/menchika-japanese'
-  const devCredits = [
-    { name: 'FlowingSPDG', handle: 'flowingspdg' },
-    { name: '2fxz4x', handle: '2fxz4x' },
-  ] as const
+  const devCredit = { name: 'FlowingSPDG', handle: 'flowingspdg' } as const
+  const chartCredit = { name: '2fxz4x', handle: '2fxz4x' } as const
   const inputTip =
     '対応していない語や読みが多いため、漢字混じりよりひらがなでの入力をおすすめします。'
 
   let themePref = $state<ThemePreference>('system')
   let japaneseIn = $state('')
-  let ngAsLiteral = $state(false)
   let hiraganaOut = $state('')
   let emojiEncOut = $state('')
   let encodeWarn = $state('')
@@ -31,6 +30,19 @@
   let decodeWarn = $state('')
 
   let encodeGeneration = 0
+  let chartDialog: HTMLDialogElement | undefined
+
+  function openChartModal(): void {
+    chartDialog?.showModal()
+  }
+
+  function closeChartModal(): void {
+    chartDialog?.close()
+  }
+
+  function onChartDialogClick(e: MouseEvent): void {
+    if (e.target === chartDialog) closeChartModal()
+  }
 
   function syncThemeToggle(): void {
     themePref = getPreference()
@@ -71,9 +83,7 @@
       const normalized = await toHiragana(raw)
       if (gen !== encodeGeneration) return
 
-      const enc = encodeHiraganaToEmoji(normalized.hiragana, {
-        ngAsLiteral,
-      })
+      const enc = encodeHiraganaToEmoji(normalized.hiragana)
       if (gen !== encodeGeneration) return
 
       hiraganaOut = normalized.hiragana
@@ -132,10 +142,14 @@
 
 <svelte:head>
   <title>{siteName}</title>
+  <meta name="description" content={siteIntro} />
 </svelte:head>
 
 <header class="site-header">
-  <h1>{siteName}</h1>
+  <div class="site-heading">
+    <h1>{siteName}</h1>
+    <p class="site-intro">{siteIntro}</p>
+  </div>
   <button
     type="button"
     class="theme-toggle"
@@ -150,6 +164,12 @@
 
 <p class="input-tip" role="note">{inputTip}</p>
 
+<p class="chart-open-row">
+  <button type="button" class="chart-open-btn" onclick={openChartModal}>
+    変換対応表を見る（46音）
+  </button>
+</p>
+
 <fieldset>
   <label for="japanese-in">入力（日本語）</label>
   <textarea
@@ -158,14 +178,6 @@
     bind:value={japaneseIn}
     oninput={scheduleEncode}
   ></textarea>
-
-  <input
-    type="checkbox"
-    id="opt-ng"
-    bind:checked={ngAsLiteral}
-    onchange={scheduleEncode}
-  />
-  <label for="opt-ng">んをリテラル NG で出力（既定は 🆖）</label>
 
   <label for="hiragana-out">ひらがな（変換後・読み取り専用）</label>
   <div id="hiragana-out" class="output" role="status">{hiraganaOut}</div>
@@ -222,49 +234,75 @@
   {/if}
 </fieldset>
 
-<details class="chart">
-  <summary>メン地下会話絵文字一覧（46音）</summary>
+{#snippet chartGrid()}
   <table class="chart-grid">
-    <thead>
-      <tr>
-        <th></th>
-        {#each [1, 2, 3, 4, 5] as col}
-          <th>列{col}</th>
-        {/each}
-      </tr>
-    </thead>
     <tbody>
-      {#each Array.from({ length: CHART_PAIRS.length / 5 }, (_, r) => r) as r}
+      {#each CHART_ROWS as row, ri}
         <tr>
-          <th>{r + 1}段</th>
-          {#each [0, 1, 2, 3, 4] as c}
-            {@const ix = r * 5 + c}
+          <th scope="row" class="chart-row-label">{CHART_ROW_LABELS[ri]}行</th>
+          {#each row as pair}
             <td>
-              {#if ix < CHART_PAIRS.length}
-                {@const pair = CHART_PAIRS[ix]!}
-                {pair[0]} {pair[1]}
-              {/if}
+              <span class="chart-cell-kana">{pair[0]}</span>
+              <span class="chart-cell-emoji" aria-hidden="true">{pair[1]}</span>
             </td>
+          {/each}
+          {#each Array(5 - row.length) as _}
+            <td class="chart-cell-empty" aria-hidden="true"></td>
           {/each}
         </tr>
       {/each}
     </tbody>
   </table>
-</details>
+{/snippet}
 
-<footer>
-  <p class="footer-credits">
-    開発:
-    {#each devCredits as dev, i}
-      {#if i > 0}&nbsp;{/if}
-      {dev.name}(<a
-        href="https://x.com/{dev.handle}"
-        rel="noreferrer noopener"
-        target="_blank">x:{dev.handle}</a>)
-    {/each}
-  </p>
-  <p>
+<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_noninteractive_element_interactions -->
+<dialog
+  bind:this={chartDialog}
+  class="chart-modal"
+  aria-labelledby="chart-modal-title"
+  onclick={onChartDialogClick}
+>
+  <div class="chart-modal-panel">
+    <header class="chart-modal-header">
+      <h2 id="chart-modal-title">メン地下会話絵文字一覧（46音）</h2>
+      <button
+        type="button"
+        class="chart-modal-close"
+        aria-label="閉じる"
+        onclick={closeChartModal}
+      >
+        ×
+      </button>
+    </header>
+    <div class="chart-modal-body">
+      {@render chartGrid()}
+      <p class="chart-modal-note">
+        濁点は直前のモーラのあとに <code>"</code>、半濁点（は行）は <code>。</code>。んは
+        🆖、しは <code>4️⃣</code>（じは <code>4️⃣"</code>）。貼り付けた文字列中の
+        <code>NG</code> はんとしてデコードします。
+      </p>
+    </div>
+    <footer class="chart-modal-footer">
+      <button type="button" onclick={closeChartModal}>閉じる</button>
+    </footer>
+  </div>
+</dialog>
+
+<footer class="site-footer">
+  <div class="footer-line">
+    開発: {devCredit.name}(<a
+      href="https://x.com/{devCredit.handle}"
+      rel="noreferrer noopener"
+      target="_blank">x:{devCredit.handle}</a>)
+  </div>
+  <div class="footer-line">
+    変換表提供: {chartCredit.name}(<a
+      href="https://x.com/{chartCredit.handle}"
+      rel="noreferrer noopener"
+      target="_blank">x:{chartCredit.handle}</a>)
+  </div>
+  <div class="footer-line">
     <a href={repoUrl} rel="noreferrer noopener" target="_blank">{repoUrl}</a>
     ・読みには揺れや誤差があります。
-  </p>
+  </div>
 </footer>
